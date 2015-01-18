@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">SimpleToDo</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="new_todo_add">Enter a new item</string>
+    <string name="add_item_btn_text">Add Item</string>
+    <string name="title_activity_edit_item">EditItemActivity</string>
+    <string name="edit_item_belo">Edit item below</string>
+    <string name="save_button">save</string>
+
+</resources>

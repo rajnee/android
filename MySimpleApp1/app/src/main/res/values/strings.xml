@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">MySimpleApp1</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="submit_label">submit</string>
+    <string name="tvLabel_init_text">your text displayed here</string>
+    <string name="init_edit_text">Enter your text here</string>
+
+</resources>
