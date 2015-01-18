@@ -12,6 +12,7 @@ import android.widget.EditText;
 public class EditItemActivity extends ActionBarActivity {
 
     private EditText editText;
+    private int pos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,11 +20,17 @@ public class EditItemActivity extends ActionBarActivity {
         setContentView(R.layout.activity_edit_item);
         editText = (EditText)findViewById(R.id.editItem);
         Intent intent = getIntent();
-        editText.setText(intent.getStringExtra("edited_item"));
+        editText.setText(intent.getStringExtra(Strings.EDITED_ITEM_TXT));
+        this.pos = intent.getIntExtra(Strings.EDITED_ITEM_POS, -1);
     }
 
     public void onSaveClick(View v)
     {
+        Intent intent = new Intent();
+        String s = editText.getText().toString();
+        intent.putExtra(Strings.EDITED_ITEM_TXT, s);
+        intent.putExtra(Strings.EDITED_ITEM_POS, pos);
+        setResult(RESULT_OK, intent);
         this.finish();
     }
 

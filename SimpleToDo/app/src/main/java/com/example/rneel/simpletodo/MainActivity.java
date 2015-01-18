@@ -39,8 +39,7 @@ public class MainActivity extends ActionBarActivity {
 
 
     private void readItems() {
-        File filesDir =  getFilesDir();
-        File todoFile = new File(filesDir, "todo.txt");
+        File todoFile = getFile();
         try {
             items = new ArrayList<String>(FileUtils.readLines(todoFile));
         }catch (IOException e) {
@@ -49,9 +48,13 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
+    private File getFile() {
+        File filesDir =  getFilesDir();
+        return new File(filesDir, Strings.FILE_NAME);
+    }
+
     private void writeItems() {
-        File filesDir = getFilesDir();
-        File todoFile = new File(filesDir, "todo.txt");
+        File todoFile = getFile();
 
         try {
             FileUtils.writeLines(todoFile,items);
@@ -76,7 +79,7 @@ public class MainActivity extends ActionBarActivity {
         writeItems();
     }
 
-    private final int REQUEST_CODE = 21;
+    private final int REQUEST_CODE = 20;
 
     private void setupListViewListener() {
         lvItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -93,10 +96,26 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent i = new Intent(MainActivity.this, EditItemActivity.class);
-                i.putExtra("edited_item",items.get(position));
-                startActivity(i);
+                i.putExtra(Strings.EDITED_ITEM_TXT,items.get(position));
+                i.putExtra(Strings.EDITED_ITEM_POS,position);
+//                startActivity(i);
+                startActivityForResult(i, REQUEST_CODE);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK)
+        {
+            String t = data.getStringExtra(Strings.EDITED_ITEM_TXT);
+            int pos = data.getIntExtra(Strings.EDITED_ITEM_POS, -1);
+            if (pos != -1 && pos < items.size()) {
+                items.set(pos, t);
+                itemsAdapter.notifyDataSetChanged();
+                writeItems();
+            }
+        }
     }
 
     @Override
