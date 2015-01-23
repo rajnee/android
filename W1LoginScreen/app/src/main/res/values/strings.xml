@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">W1LoginScreen</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="login_label">Login. Here we go!</string>
+    <string name="text_login">Login</string>
+    <string name="text_cancel">Cancel</string>
+    <string name="hint_email">E-mail address</string>
+    <string name="hint_password">Password</string>
+    <string name="label_forgot">I forgot my password</string>
+
+</resources>
