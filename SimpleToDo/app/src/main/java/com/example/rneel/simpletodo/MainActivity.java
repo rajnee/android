@@ -15,19 +15,13 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity {
 
-    private ArrayList<Item> items;
-    private ArrayAdapter<String> itemsAdapter1;
-    private ItemAdapter itemsAdapter;
+    private ArrayList<String> items;
+    private ArrayAdapter<String> itemsAdapter;
     private ListView lvItems;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +30,7 @@ public class MainActivity extends ActionBarActivity {
         lvItems = (ListView)findViewById(R.id.lvItems);
 //        items = new ArrayList<>();
         readItems();
-        itemsAdapter = new ItemAdapter(getApplication(), R.layout.one_item, items);
+        itemsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items);
         lvItems.setAdapter(itemsAdapter);
 //        items.add("first item");
 //        items.add("second item");
@@ -47,13 +41,11 @@ public class MainActivity extends ActionBarActivity {
     private void readItems() {
         File todoFile = getFile();
         try {
-            List<String> lines = FileUtils.readLines(todoFile);
-            items = new ArrayList<>();
-            for (String s:lines) {
-                items.add(new Item(s));
-            }
+            items = new ArrayList<String>(FileUtils.readLines(todoFile));
         }catch (IOException e) {
+            items = new ArrayList<>();
         }
+
     }
 
     private File getFile() {
@@ -81,7 +73,7 @@ public class MainActivity extends ActionBarActivity {
         EditText etNewItem = (EditText)findViewById(R.id.etNewItem);
         String s = etNewItem.getText().toString();
         if (s != null && !s.trim().equals("")) {
-            itemsAdapter.add(new Item(s.trim(), null));
+            itemsAdapter.add(s.trim());
         }
         etNewItem.setText("");
         writeItems();
@@ -104,8 +96,7 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent i = new Intent(MainActivity.this, EditItemActivity.class);
-                //TODO: need to correct editing
-                i.putExtra(Strings.EDITED_ITEM_TXT,items.get(position).toString());
+                i.putExtra(Strings.EDITED_ITEM_TXT,items.get(position));
                 i.putExtra(Strings.EDITED_ITEM_POS,position);
 //                startActivity(i);
                 startActivityForResult(i, REQUEST_CODE);
@@ -117,11 +108,10 @@ public class MainActivity extends ActionBarActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK)
         {
-            //TODO: may need to pass an item back and forth
             String t = data.getStringExtra(Strings.EDITED_ITEM_TXT);
             int pos = data.getIntExtra(Strings.EDITED_ITEM_POS, -1);
             if (pos != -1 && pos < items.size()) {
-                items.set(pos, new Item(t));
+                items.set(pos, t);
                 itemsAdapter.notifyDataSetChanged();
                 writeItems();
             }
