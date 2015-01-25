@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -27,14 +28,17 @@ public class PhotosActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photos);
-        getPopularPhotos();
         adapter = new InstagramPhotosAdapter(this,photos);
         ListView listView = (ListView)findViewById(R.id.listView);
         listView.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+        getPopularPhotos();
 
     }
 
+    public void onImageClick(View view) {
+        
+        
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -124,6 +128,7 @@ public class PhotosActivity extends Activity {
                             e.printStackTrace();
                         }
                     }
+                adapter.notifyDataSetChanged();
             }
         });
     }

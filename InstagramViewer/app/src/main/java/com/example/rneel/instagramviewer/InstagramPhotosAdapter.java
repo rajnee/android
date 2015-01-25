@@ -35,7 +35,8 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto>{
         ViewHolder vh;
         if (convertView == null)
         {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.instagram_photo_layout,parent, false);
+//            convertView = LayoutInflater.from(getContext()).inflate(R.layout.instagram_photo_layout,parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.test_photo_layout1,parent, false);
             vh = new ViewHolder();
             vh.imageView = (ImageView)convertView.findViewById(R.id.ivPhoto);
             vh.caption = (TextView)convertView.findViewById(R.id.tvTitle);

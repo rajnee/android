@@ -7,9 +7,11 @@
     <string name="title_activity_photos">PhotosActivity</string>
     <string name="popular_photos_caption">Popular Photos</string>
     <string name="text_liked_by">Liked By:</string>
-    <string name="blank_liked_by" />
-    <string name="blank_user" />
+    <string name="blank_liked_by"></string>
+    <string name="blank_user"></string>
     <string name="label_user">User:</string>
-    <string name="label_blank_caption" />
+    <string name="label_blank_caption"></string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="hint_test">test test</string>
 
 </resources>
