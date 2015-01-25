@@ -1,6 +1,8 @@
 # Demo of a simple layout in a list
 
-    ![Video Walkthrough](walkthrough.gif)
+Simple layout based on list view and relative layout
 
-    GIF created with [LiceCap](http://www.cockos.com/licecap/).
+![Video Walkthrough](walkthrough.gif)
+
+GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
