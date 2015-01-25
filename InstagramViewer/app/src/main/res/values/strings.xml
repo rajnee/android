@@ -6,5 +6,10 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_photos">PhotosActivity</string>
     <string name="popular_photos_caption">Popular Photos</string>
+    <string name="text_liked_by">Liked By:</string>
+    <string name="blank_liked_by" />
+    <string name="blank_user" />
+    <string name="label_user">User:</string>
+    <string name="label_blank_caption" />
 
 </resources>
