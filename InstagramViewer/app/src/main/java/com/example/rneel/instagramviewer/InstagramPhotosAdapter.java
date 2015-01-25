@@ -23,6 +23,7 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto>{
         TextView caption;
         TextView likedByCount;
         TextView user;
+        ImageView userProfilePicture;
     }
 
     public InstagramPhotosAdapter(Context context, ArrayList<InstagramPhoto> photos) {
@@ -35,12 +36,14 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto>{
         ViewHolder vh;
         if (convertView == null)
         {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.instagram_photo_layout,parent, false);
+//            convertView = LayoutInflater.from(getContext()).inflate(R.layout.instagram_photo_layout,parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.photo_layout_design1,parent, false);
             vh = new ViewHolder();
             vh.imageView = (ImageView)convertView.findViewById(R.id.ivPhoto);
             vh.caption = (TextView)convertView.findViewById(R.id.tvTitle);
             vh.likedByCount = (TextView)convertView.findViewById(R.id.tvLikedByCount);
             vh.user = (TextView)convertView.findViewById(R.id.tvUser);
+            vh.userProfilePicture = (ImageView)convertView.findViewById(R.id.ivUserProfilePicture);
             convertView.setTag(vh);
         }
         else
@@ -59,6 +62,7 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto>{
         vh.caption.setText(photo.title);
         vh.user.setText(photo.userName);
         vh.likedByCount.setText(photo.likesCount);
+        Picasso.with(getContext()).load(photo.profilePicture).resize(30,30).into(vh.userProfilePicture);
         return convertView;
     }
 }

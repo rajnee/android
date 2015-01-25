@@ -27,11 +27,10 @@ public class PhotosActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photos);
-        getPopularPhotos();
         adapter = new InstagramPhotosAdapter(this,photos);
         ListView listView = (ListView)findViewById(R.id.listView);
         listView.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+        getPopularPhotos();
 
     }
 
@@ -110,7 +109,7 @@ public class PhotosActivity extends Activity {
                                 if (images != null) {
                                     JSONObject standardRes = getJSONObjectAndSwallowException(images, "standard_resolution");
                                     String url = standardRes.getString("url");
-                                    Log.d(LOGTAG, "image url:" + instagramPhoto.profilePicture);
+//                                    Log.d(LOGTAG, "image url:" + instagramPhoto.profilePicture);
                                     int height = standardRes.getInt("height");
                                     instagramPhoto.imageUrl = url;
                                     instagramPhoto.imageHeight = height;
@@ -124,6 +123,7 @@ public class PhotosActivity extends Activity {
                             e.printStackTrace();
                         }
                     }
+                adapter.notifyDataSetChanged();
             }
         });
     }
