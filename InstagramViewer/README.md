@@ -11,6 +11,7 @@ Completed user stories:
  * [x] Required: User can see the following details: photo, user name, caption
  * [x] Optional: User can see additional fields: liked by count, displaying against a thumbs up icon
  * [x] Optional: User can see a profile picture on the top of picture
+ * [x] Advanced: User can refresh by pulling down, used SwipeRefreshLayout from android support bundle
     
     Notes:
 
@@ -20,6 +21,7 @@ Completed user stories:
     Walkthrough of all user stories:
 
     ![Video Walkthrough](walkthrough.gif)
+    ![Video Walkthrough](walkthrough_refresh.gif)
 
     GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
