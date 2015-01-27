@@ -2,6 +2,7 @@ package com.example.rneel.instagramviewer;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +23,7 @@ public class PhotosActivity extends Activity {
 
     private ArrayList<InstagramPhoto> photos = new ArrayList<InstagramPhoto>();
     private InstagramPhotosAdapter adapter;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private static final String LOGTAG = "PhotoActivitiy";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +32,14 @@ public class PhotosActivity extends Activity {
         adapter = new InstagramPhotosAdapter(this,photos);
         ListView listView = (ListView)findViewById(R.id.listView);
         listView.setAdapter(adapter);
+        swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipe_container);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getPopularPhotos();
+            }
+        });
         getPopularPhotos();
-
     }
 
     @Override
@@ -124,6 +132,7 @@ public class PhotosActivity extends Activity {
                         }
                     }
                 adapter.notifyDataSetChanged();
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
     }
