@@ -1,0 +1,119 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" 
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.example.rneel.gridimagesearch.SettingsActivity">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lbl_advanced_search"
+        android:id="@+id/lblAdvancedSearch"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lbl_image_size"
+        android:id="@+id/lblImageSize"
+        android:layout_below="@+id/lblAdvancedSearch"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textSize="20sp"
+        android:layout_marginTop="20dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lbl_color_filter"
+        android:id="@+id/lblColorFilter"
+        android:layout_below="@+id/lblImageSize"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textSize="20sp"
+        android:layout_marginTop="20dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lbl_image_type"
+        android:id="@+id/lblImageType"
+        android:layout_below="@+id/lblColorFilter"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textSize="20sp"
+        android:layout_marginTop="20dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lbl_site_filter"
+        android:id="@+id/lblSiteFilter"
+        android:layout_below="@+id/lblImageType"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textSize="20sp"
+        android:layout_marginTop="20dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_save"
+        android:id="@+id/btnSave"
+        android:layout_below="@+id/lblSiteFilter"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="35dp"
+        android:onClick="onSaveClick"
+        android:textSize="20sp" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinnerImageSize"
+        android:entries="@array/image_size_array"
+        android:paddingLeft="5dp"
+        android:layout_alignTop="@+id/lblImageSize"
+        android:layout_toRightOf="@+id/lblImageType"
+        android:layout_alignParentRight="true"
+     />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinnerColorFilter"
+        android:entries="@array/image_color_array"
+        android:paddingLeft="5dp"
+        android:layout_alignTop="@+id/lblColorFilter"
+        android:layout_toRightOf="@+id/lblImageType"
+        android:layout_alignParentRight="true"
+        />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinnerImageType"
+        android:entries="@array/image_type_array"
+        android:paddingLeft="5dp"
+        android:layout_alignTop="@+id/lblImageType"
+        android:layout_toRightOf="@+id/lblImageType"
+        android:layout_alignParentRight="true"
+        />
+    
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/etSiteFilter"
+        android:paddingLeft="5dp"
+        android:layout_alignTop="@+id/lblSiteFilter"
+        android:layout_toRightOf="@+id/lblImageType"
+        android:layout_alignParentRight="true"
+     />
+
+</RelativeLayout>
