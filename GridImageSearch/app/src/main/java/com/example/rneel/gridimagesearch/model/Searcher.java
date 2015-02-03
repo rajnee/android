@@ -24,11 +24,14 @@ public class Searcher {
     
     private String query;
     private SettingsModel model;
+    private int page = 0;
 
     public void setQuery(String query)
     {
         this.query = query;                
     }
+    
+    public void setPage(int page) { this.page = page;}
     
     private String getFullQuery()
     {
@@ -38,7 +41,7 @@ public class Searcher {
         }
         
         StringBuilder sb = new StringBuilder(baseUrl);
-        sb.append("&").append("q=").append(Html.escapeHtml(query));
+        sb.append("&").append("q=").append(query);
         
         if (model != null) {
             if (model.colorFilter != null && !model.colorFilter.equals("any")) {
@@ -59,7 +62,8 @@ public class Searcher {
                 sb.append("&").append("as_sitesearch=").append(model.siteFilter);
             }
         }
-        
+        int start = page*8;
+        sb.append("&start=").append(start);
         return sb.toString();        
     }
 
@@ -72,6 +76,8 @@ public class Searcher {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
                     JSONObject obj = response.getJSONObject("responseData");
+                    JSONObject cursor = obj.getJSONObject("cursor");
+                    int page = cursor.getInt("currentPageIndex");
                     JSONArray array = obj.getJSONArray("results");
                     List<ImageResult> imageResultList = new ArrayList<ImageResult>();
                     for (int i = 0; i < array.length(); i++) {
@@ -93,7 +99,7 @@ public class Searcher {
                     if (imageResultList.size() == 0) {
                         receiver.setError();
                     } else {
-                        receiver.setResult(imageResultList);
+                        receiver.setResult(imageResultList, page);
                     }
 
                 } catch (JSONException e) {

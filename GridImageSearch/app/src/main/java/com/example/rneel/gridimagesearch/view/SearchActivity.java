@@ -11,9 +11,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import com.example.rneel.gridimagesearch.PictureDetailActivity;
 import com.example.rneel.gridimagesearch.R;
-import com.example.rneel.gridimagesearch.SettingsActivity;
 import com.example.rneel.gridimagesearch.model.ImageResult;
 import com.example.rneel.gridimagesearch.model.ImageResultsReceiver;
 import com.example.rneel.gridimagesearch.model.Searcher;
@@ -50,23 +48,46 @@ public class SearchActivity extends ActionBarActivity {
 
             }
         });
+        
+        gvSearchImages.setOnScrollListener(new ImageViewOnScrollListener() {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount) {
+                refreshSearch(page);
+            }
+        });
     }
 
     public void onSearchForImage(View view){
         refreshSearch();
+        refreshSearch(1);
         
     }
 
     private void refreshSearch() {
+        refreshSearch(0);
+    }
+    
+    private void refreshSearch(int page) {
+        if (page > 7) return;
         Searcher searcher = new Searcher();
         String query = etSearch.getText().toString();
+        searcher.setPage(page);
         searcher.setQuery(query);
         searcher.setModel(settingsModel);
         searcher.getAndFillResults(new ImageResultsReceiver() {
             @Override
-            public void setResult(List<ImageResult> imageResultList) {
-                imageResultsAdapter.clear();
-                imageResultsAdapter.addAll(imageResultList);
+            public void setResult(List<ImageResult> imageResultList, int page) {
+                int totalResults = (page+1)*8;
+                int startIndex = page*8;
+                if (startIndex == 0) imageResultsAdapter.clear();
+                if (imageResultsAdapter.getCount() > startIndex)
+                {
+                    for (int i = SearchActivity.this.imageResultList.size() -1; i >= startIndex; i--) {
+                        SearchActivity.this.imageResultList.remove(i);
+                    }
+                }
+                SearchActivity.this.imageResultList.addAll(imageResultList);
+                imageResultsAdapter.notifyDataSetChanged();
             }
 
             @Override

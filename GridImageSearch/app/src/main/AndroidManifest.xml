@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".PictureDetailActivity"
+            android:name=".view.PictureDetailActivity"
             android:label="@string/title_activity_picture_detail"
             android:parentActivityName=".view.SearchActivity" >
             <meta-data
@@ -27,7 +27,7 @@
                 android:value="com.example.rneel.gridimagesearch.view.SearchActivity" />
         </activity>
         <activity
-            android:name=".SettingsActivity"
+            android:name=".view.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".view.SearchActivity" >
             <meta-data

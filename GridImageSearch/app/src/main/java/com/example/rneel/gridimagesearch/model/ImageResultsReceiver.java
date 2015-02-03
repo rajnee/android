@@ -8,6 +8,6 @@ import java.util.List;
  * Created by rneel on 1/31/15.
  */
 public interface ImageResultsReceiver {
-    void setResult(List<ImageResult> imageResultList);
+    void setResult(List<ImageResult> imageResultList, int page);
     void setError();
 }
