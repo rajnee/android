@@ -5,9 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.rneel.apps.mytwitter.models.Tweet;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -30,6 +32,7 @@ public class TweetListAdapter extends ArrayAdapter<Tweet> {
             vh.tvTweet = (TextView)convertView.findViewById(R.id.tvTweet);
             vh.tvUser = (TextView)convertView.findViewById(R.id.tvUser);
             vh.tvRelativeDate = (TextView)convertView.findViewById(R.id.tvRelativeTime);
+            vh.ivProfile = (ImageView)convertView.findViewById(R.id.ivProfile);
             convertView.setTag(vh);
         }
         else
@@ -39,6 +42,7 @@ public class TweetListAdapter extends ArrayAdapter<Tweet> {
         vh.tvUser.setText(tweet.getUserHandle());
         vh.tvTweet.setText(tweet.getBody());
         vh.tvRelativeDate.setText(tweet.getRelativeTime());
+        Picasso.with(getContext()).load(tweet.getProfileImage()).into(vh.ivProfile);
         return convertView;
     }
     
@@ -46,6 +50,6 @@ public class TweetListAdapter extends ArrayAdapter<Tweet> {
         TextView tvTweet;
         TextView tvUser;
         TextView tvRelativeDate;
-        
+        ImageView ivProfile;
     }
 }

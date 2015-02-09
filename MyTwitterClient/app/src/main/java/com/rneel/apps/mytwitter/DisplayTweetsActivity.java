@@ -1,5 +1,6 @@
 package com.rneel.apps.mytwitter;
 
+import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -52,6 +53,7 @@ public class DisplayTweetsActivity extends ActionBarActivity {
 
     }
     
+
     private TweetsReceiver getTweetsReceiver()
     {
         return new TweetsReceiver() {
@@ -119,7 +121,10 @@ public class DisplayTweetsActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_compose) {
+            Toast.makeText(this,"clicked compose", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(this,AddTweetActivity.class);
+            startActivity(i);
             return true;
         }
 

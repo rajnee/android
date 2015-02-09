@@ -2,12 +2,16 @@
 <resources>
 
     <string name="app_name">My Twitter</string>
-    <string name="login_label">Log in</string>
+    <string name="login_label">Connect To Twitter</string>
     <string name="title_activity_add_tweet">AddTweetActivity</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_display_tweets">Tweets Home Line</string>
     <string name="hint_user">user</string>
     <string name="hint_tweet">line of tweet tweet</string>
+    <string name="action_compose">Compose Message</string>
+    <string name="hint_enter_tweet">Enter your tweet</string>
+    <string name="btn_tweet">Send Tweet</string>
+    <string name="btn_cancel">Cancel</string>
 
 </resources>

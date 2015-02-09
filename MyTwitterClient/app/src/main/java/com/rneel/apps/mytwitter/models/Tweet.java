@@ -35,6 +35,9 @@ public class Tweet extends Model {
     @Column(name = "body")
     String body;
 
+    @Column(name="profileImage")
+    String profileImage;
+    
     @Column(name="tweetId", index = true)
     long tweetId;
 
@@ -43,7 +46,7 @@ public class Tweet extends Model {
         return tweetId;
     }
 
-
+    public String getProfileImage() { return profileImage; }
     public String getUserId() {
         return userId;
     }
@@ -115,6 +118,7 @@ public class Tweet extends Model {
             this.userHandle = userObj.getString("name");
             this.timestamp = object.getString("created_at");
             this.body = object.getString("text");
+            this.profileImage = userObj.getString("profile_image_url");
         } catch (JSONException e) {
             e.printStackTrace();
         }

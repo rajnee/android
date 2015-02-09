@@ -35,6 +35,18 @@ public class RestClient extends OAuthBaseClient {
 		super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
 	}
 
+    public void getProfileForCurrentUser(AsyncHttpResponseHandler handler)
+    {
+        String apiUrl = getApiUrl("users/show.json");
+        Log.d("RestClient", "Url:" + apiUrl);
+        RequestParams params = new RequestParams();
+//        params.put("page", String.valueOf(page));
+//        params.put("trim_user",1);
+        params.put("user_id", );
+        getClient().get(apiUrl, params, handler);
+
+
+    }
 	// CHANGE THIS
 	// DEFINE METHODS for different API endpoints here
 	public void getInterestingnessList(AsyncHttpResponseHandler handler) {

@@ -3,7 +3,7 @@
     android:id="@+id/swipeContainer"
     android:layout_height="match_parent" 
     android:paddingLeft="2dp"
-    tools:context="com.codepath.apps.mytwitter.DisplayTweetsActivity">
+    tools:context="com.rneel.apps.mytwitter.DisplayTweetsActivity">
 
     <!--android:paddingLeft="@dimen/activity_horizontal_margin"-->
     <!--android:paddingRight="@dimen/activity_horizontal_margin"-->
