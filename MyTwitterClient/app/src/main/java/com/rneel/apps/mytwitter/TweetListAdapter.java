@@ -29,6 +29,7 @@ public class TweetListAdapter extends ArrayAdapter<Tweet> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.layout_tweet,parent,false);
             vh.tvTweet = (TextView)convertView.findViewById(R.id.tvTweet);
             vh.tvUser = (TextView)convertView.findViewById(R.id.tvUser);
+            vh.tvRelativeDate = (TextView)convertView.findViewById(R.id.tvRelativeTime);
             convertView.setTag(vh);
         }
         else
@@ -37,12 +38,14 @@ public class TweetListAdapter extends ArrayAdapter<Tweet> {
         }
         vh.tvUser.setText(tweet.getUserHandle());
         vh.tvTweet.setText(tweet.getBody());
+        vh.tvRelativeDate.setText(tweet.getRelativeTime());
         return convertView;
     }
     
     private static class ViewHolder {
         TextView tvTweet;
         TextView tvUser;
+        TextView tvRelativeDate;
         
     }
 }

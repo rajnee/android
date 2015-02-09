@@ -5,6 +5,7 @@ package com.rneel.apps.mytwitter.models;
  */
 // models/Tweet.java
 
+import android.text.format.DateUtils;
 import android.util.Log;
 
 import com.activeandroid.annotation.Table;
@@ -17,7 +18,10 @@ import org.json.JSONObject;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
+import java.text.ParseException;
 
 @Table(name = "Tweets")
 public class Tweet extends Model {
@@ -32,10 +36,10 @@ public class Tweet extends Model {
     String body;
 
     @Column(name="tweetId", index = true)
-    String tweetId;
+    long tweetId;
 
 
-    public String getTweetId() {
+    public long getTweetId() {
         return tweetId;
     }
 
@@ -77,6 +81,27 @@ public class Tweet extends Model {
         super();
     }
 
+    public String getRelativeTime()
+    {
+        return getRelativeTimeAgo(getTimestamp());
+    }
+    // getRelativeTimeAgo("Mon Apr 01 21:16:23 +0000 2014");
+    private String getRelativeTimeAgo(String rawJsonDate) {
+        String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
+        SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
+        sf.setLenient(true);
+
+        String relativeDate = "";
+        try {
+            long dateMillis = sf.parse(rawJsonDate).getTime();
+            relativeDate = DateUtils.getRelativeTimeSpanString(dateMillis,
+                    System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return relativeDate;
+    }    
     // Add a constructor that creates an object from the JSON response
     public Tweet(JSONObject object){
         super();
@@ -84,7 +109,8 @@ public class Tweet extends Model {
         Log.d("Tweet", "JSON object" + object.toString() );
         try {
             JSONObject userObj = object.getJSONObject("user");
-            this.tweetId = object.getString("id_str");
+            String tid = object.getString("id_str");
+            this.tweetId = Long.parseLong(tid);
             this.userId = userObj.getString("id");
             this.userHandle = userObj.getString("name");
             this.timestamp = object.getString("created_at");

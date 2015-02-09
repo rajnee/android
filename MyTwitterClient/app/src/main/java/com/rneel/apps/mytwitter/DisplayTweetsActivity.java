@@ -1,5 +1,6 @@
 package com.rneel.apps.mytwitter;
 
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,14 +10,12 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.rneel.apps.mytwitter.models.Tweet;
-import com.loopj.android.http.JsonHttpResponseHandler;
-
-import org.apache.http.Header;
-import org.apache.http.client.HttpResponseException;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.rneel.apps.mytwitter.models.TweetManager;
+import com.rneel.apps.mytwitter.models.TweetsReceiver;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 
 public class DisplayTweetsActivity extends ActionBarActivity {
@@ -24,6 +23,7 @@ public class DisplayTweetsActivity extends ActionBarActivity {
     private ArrayList<Tweet> tweets;
     private TweetListAdapter tweetListAdapter;
     private ListView lvTweets;
+    private SwipeRefreshLayout swipeRefreshLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,40 +32,76 @@ public class DisplayTweetsActivity extends ActionBarActivity {
         tweetListAdapter = new TweetListAdapter(this,tweets);
         lvTweets = (ListView)findViewById(R.id.lvTweets);
         lvTweets.setAdapter(tweetListAdapter);
-        getTweetHomeLine();
-    }
-
-    private void getTweetHomeLine() {
-        // SomeActivity.java
-        RestClient client = RestApplication.getRestClient();
-        client.getHomeTimeline(1, new JsonHttpResponseHandler() {
+        swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipeContainer);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray json) {
-                // Response is automatically parsed into a JSONArray
-                // json.getJSONObject(0).getLong("id");
-                ArrayList<Tweet> t = Tweet.fromJson(json);
-                tweets.addAll(t);
-                tweetListAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Toast.makeText(DisplayTweetsActivity.this, "Error occurred getting tweets", Toast.LENGTH_SHORT).show();
-                Log.d("DisplayTweetActivity","Error:" + responseString, throwable);
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Toast.makeText(DisplayTweetsActivity.this, "Error occurred getting tweets", Toast.LENGTH_SHORT).show();
-                HttpResponseException exception = (HttpResponseException)throwable;
-                Log.d("DisplayTweetActivity", exception.getMessage());
-                for (Header h:headers)
-                {
-                    Log.d("DisplayTweetActivity",h.getName() + ":" + h.getValue());
-                }
-                Log.d("DisplayTweetActivity","Error:" + errorResponse, throwable);
+            public void onRefresh() {
+                refresh();
             }
         });
+        TweetManager.init(this);
+        refresh();
+
+        lvTweets.setOnScrollListener(new TweetViewOnScrollListener() {
+            @Override
+            public void onLoadMore(int firstVisibleItem, int page, int totalItemsCount, int visibleItemCount) {
+                Log.d("DisplayTweetsActivity", "OnScroll: first=" + firstVisibleItem + ",page=" + page + ",total=" + totalItemsCount);
+                loadMore(firstVisibleItem, page, totalItemsCount, visibleItemCount);
+            }
+        });
+
+    }
+    
+    private TweetsReceiver getTweetsReceiver()
+    {
+        return new TweetsReceiver() {
+            @Override
+            public void tweetsReceived(List<Tweet> tweets) {
+                if (tweets.size() + DisplayTweetsActivity.this.tweets.size() > 100)
+                {
+                    ArrayList<Tweet> holder = new ArrayList<>();
+//                    Collections.copy(holder,DisplayTweetsActivity.this.tweets);
+                    for (int i = 0; i < DisplayTweetsActivity.this.tweets.size(); i++)
+                    {
+                        holder.add(DisplayTweetsActivity.this.tweets.get(i));
+                    }
+                    DisplayTweetsActivity.this.tweets.clear();
+                    for (int i = 31; i < holder.size(); i++)
+                    {
+                        DisplayTweetsActivity.this.tweets.add(holder.get(i));
+                    }
+                }
+                DisplayTweetsActivity.this.tweets.addAll(tweets);
+                DisplayTweetsActivity.this.tweetListAdapter.notifyDataSetChanged();
+                DisplayTweetsActivity.this.swipeRefreshLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void tweetError(String message) {
+                Toast.makeText(DisplayTweetsActivity.this,message,Toast.LENGTH_SHORT);
+            }
+        };
+        
+    }
+
+    private void loadMore(int firstVisibleItem, int page, int totalItemsCount, int visibleItemCount)
+    {
+        int count = tweetListAdapter.getCount();
+        Tweet t2 = tweetListAdapter.getItem(count - 1);
+        //We want to have a page more than mentioned page
+        //page n has items, needed till : firstVisibleItem + (page+1)*visibleItemCount
+        int requiredTill = firstVisibleItem + (page+1)*visibleItemCount;
+        int neededMore = requiredTill - totalItemsCount;
+        long beforeTweetId = t2.getTweetId();
+
+        TweetManager tweetManager = TweetManager.getInstance();
+        tweetManager.loadMore(neededMore, beforeTweetId, getTweetsReceiver());
+    }
+    
+    private void refresh() {
+        // SomeActivity.java
+        TweetManager tweetManager = TweetManager.getInstance();
+        tweetManager.refresh(getTweetsReceiver());
     }
 
     @Override

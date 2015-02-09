@@ -54,13 +54,27 @@ public class RestClient extends OAuthBaseClient {
 	 *    i.e client.post(apiUrl, params, handler);
 	 */
     // RestClient.java
-    public void getHomeTimeline(int page, AsyncHttpResponseHandler handler) {
+    public void getHomeTimeLineAfter(long tweetId, AsyncHttpResponseHandler handler) {
         String apiUrl = getApiUrl("statuses/home_timeline.json");
         Log.d("RestClient", "Url:" + apiUrl);
         RequestParams params = new RequestParams();
 //        params.put("page", String.valueOf(page));
 //        params.put("trim_user",1);
-        
+        if (tweetId != -1) {
+            params.put("since_id", tweetId);
+        }
+        getClient().get(apiUrl, params, handler);
+    }
+
+    public void getHomeTimelineBefore(long tweetId, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("statuses/home_timeline.json");
+        Log.d("RestClient", "Url:" + apiUrl);
+        RequestParams params = new RequestParams();
+//        params.put("page", String.valueOf(page));
+//        params.put("trim_user",1);
+        if (tweetId != -1) {
+            params.put("max_id", tweetId);
+        }
         getClient().get(apiUrl, params, handler);
     }
 

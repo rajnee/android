@@ -21,7 +21,7 @@ public class AddTweetActivity extends ActionBarActivity {
     private void tweet() {
         // SomeActivity.java
         RestClient client = RestApplication.getRestClient();
-        client.getHomeTimeline(1, new JsonHttpResponseHandler() {
+        client.getHomeTimeLineAfter(1, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray json) {
                 // Response is automatically parsed into a JSONArray
