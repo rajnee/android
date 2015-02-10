@@ -79,7 +79,63 @@ public class TweetManager {
         return maxId;
     }
     
-    public void loadMore(int howMany, long beforeTweetId, final TweetsReceiver tweetsReceiver)
+    private class LoadTweetTask extends AsyncTask<Void, Void, List<Tweet>>
+    {
+        private final TweetsReceiver tweetsReceiver;
+        private final long beforeTweetId;
+        private final int howMany;
+        public LoadTweetTask(int howMany, long beforeTweetId, TweetsReceiver tweetsReceiver)
+        {
+            this.tweetsReceiver = tweetsReceiver;
+            this.beforeTweetId = beforeTweetId;
+            this.howMany = howMany;
+        }
+        
+        @Override
+        protected List<Tweet> doInBackground(Void... params) {
+            final List<Tweet> dbTweets = new Select().from(Tweet.class).where("tweetId < " + beforeTweetId).limit(howMany).execute();
+            return dbTweets;
+        }
+
+        @Override
+        protected void onPostExecute(final List<Tweet> dbTweets) {
+            if (dbTweets.size() == howMany)
+            {
+                tweetsReceiver.tweetsReceived(dbTweets);
+                return;
+            }
+            else 
+            {
+
+                //we have to attempt to get from Twitter by calling API
+                long lastTweetInDB = dbTweets.get(dbTweets.size() - 1).getTweetId();
+                //We do not have enough tweets in the db, let us load more
+                RestClient client = RestApplication.getRestClient();
+                client.getHomeTimelineBefore(lastTweetInDB, new TweetResponseHandler() {
+                    @Override
+                    protected void tweetsReceived(List<Tweet> t1) {
+                        dbTweets.addAll(t1);
+                        tweetsReceiver.tweetsReceived(dbTweets);
+                    }
+
+                    @Override
+                    protected void tweetsError(String message) {
+                        tweetsReceiver.tweetError(message);
+                    }
+                });
+
+            }
+        }
+        
+    }
+
+
+    public void loadMore(int howMany, long beforeTweetId, final TweetsReceiver tweetsReceiver) 
+    {
+        new LoadTweetTask(howMany,beforeTweetId,tweetsReceiver).execute();
+    }
+    
+    public void loadMoreOld(int howMany, long beforeTweetId, final TweetsReceiver tweetsReceiver)
     {
         //Get from database first
         final List<Tweet> dbTweets = new Select().from(Tweet.class).where("tweetId < " + beforeTweetId).limit(howMany).execute();
@@ -138,21 +194,25 @@ public class TweetManager {
             
         @Override
         public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-            Log.d("DisplayTweetActivity", "Error:" + responseString, throwable);
+            Log.e("DisplayTweetActivity", "Error:" + responseString, throwable);
             tweetsError(throwable.getMessage());
         }
 
         @Override
         public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-            HttpResponseException exception = (HttpResponseException)throwable;
-//                Log.d("DisplayTweetActivity", exception.getMessage());
-//                for (Header h:headers)
-//                {
-//                    Log.d("DisplayTweetActivity",h.getName() + ":" + h.getValue());
-//                }
-//                Log.d("DisplayTweetActivity","Error:" + errorResponse, throwable);
             tweetsError(throwable.getMessage());
-        }        
+        }
+        
+        private void logException(Header[] headers, JSONObject errorResponse, Throwable throwable)
+        {
+            HttpResponseException exception = (HttpResponseException)throwable;
+            Log.e("DisplayTweetActivity", exception.getMessage());
+            for (Header h:headers)
+            {
+                Log.e("DisplayTweetActivity",h.getName() + ":" + h.getValue());
+            }
+            Log.e("DisplayTweetActivity","Error:" + errorResponse, throwable);
+        }
         
     }
 }

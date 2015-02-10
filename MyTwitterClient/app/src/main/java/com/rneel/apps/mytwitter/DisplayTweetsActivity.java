@@ -59,20 +59,6 @@ public class DisplayTweetsActivity extends ActionBarActivity {
         return new TweetsReceiver() {
             @Override
             public void tweetsReceived(List<Tweet> tweets) {
-                if (tweets.size() + DisplayTweetsActivity.this.tweets.size() > 100)
-                {
-                    ArrayList<Tweet> holder = new ArrayList<>();
-//                    Collections.copy(holder,DisplayTweetsActivity.this.tweets);
-                    for (int i = 0; i < DisplayTweetsActivity.this.tweets.size(); i++)
-                    {
-                        holder.add(DisplayTweetsActivity.this.tweets.get(i));
-                    }
-                    DisplayTweetsActivity.this.tweets.clear();
-                    for (int i = 31; i < holder.size(); i++)
-                    {
-                        DisplayTweetsActivity.this.tweets.add(holder.get(i));
-                    }
-                }
                 DisplayTweetsActivity.this.tweets.addAll(tweets);
                 DisplayTweetsActivity.this.tweetListAdapter.notifyDataSetChanged();
                 DisplayTweetsActivity.this.swipeRefreshLayout.setRefreshing(false);
@@ -81,6 +67,7 @@ public class DisplayTweetsActivity extends ActionBarActivity {
             @Override
             public void tweetError(String message) {
                 Toast.makeText(DisplayTweetsActivity.this,message,Toast.LENGTH_SHORT);
+                DisplayTweetsActivity.this.swipeRefreshLayout.setRefreshing(false);
             }
         };
         
@@ -96,8 +83,11 @@ public class DisplayTweetsActivity extends ActionBarActivity {
         int neededMore = requiredTill - totalItemsCount;
         long beforeTweetId = t2.getTweetId();
 
-        TweetManager tweetManager = TweetManager.getInstance();
-        tweetManager.loadMore(neededMore, beforeTweetId, getTweetsReceiver());
+        if (requiredTill > 0)
+        {
+            TweetManager tweetManager = TweetManager.getInstance();
+            tweetManager.loadMore(neededMore, beforeTweetId, getTweetsReceiver());
+        }
     }
     
     private void refresh() {
@@ -122,7 +112,7 @@ public class DisplayTweetsActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_compose) {
-            Toast.makeText(this,"clicked compose", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this,"clicked compose", Toast.LENGTH_SHORT).show();
             Intent i = new Intent(this,AddTweetActivity.class);
             startActivity(i);
             return true;

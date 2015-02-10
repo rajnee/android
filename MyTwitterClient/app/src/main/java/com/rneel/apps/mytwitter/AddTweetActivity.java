@@ -6,23 +6,56 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.squareup.picasso.Picasso;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class AddTweetActivity extends ActionBarActivity {
 
     private EditText etTweet;
+    private TextView tvCurrentUser;
+    private ImageView ivCurrentUserProfileImage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_tweet);
         etTweet = (EditText)findViewById(R.id.etTweet);
         etTweet.setBackground(getResources().getDrawable(android.R.drawable.editbox_background_normal));
+        tvCurrentUser = (TextView)findViewById(R.id.tvUser);
+        ivCurrentUserProfileImage = (ImageView)findViewById(R.id.ivCurrentUserProfile);
+        showCurrentUser();
+    }
+    
+    private void showCurrentUser()
+    {
+        RestClient client = RestApplication.getRestClient();
+        client.getProfileForCurrentUser(new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    String user = response.getString("screen_name");
+                    tvCurrentUser.setText("@" + user);
+                    String url = response.getString("profile_image_url");
+                    Picasso.with(AddTweetActivity.this).load(url).into(ivCurrentUserProfileImage);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+
+            }
+        });
+        
     }
 
     private void tweet() {

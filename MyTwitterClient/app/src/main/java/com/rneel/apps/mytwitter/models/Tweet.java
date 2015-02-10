@@ -109,7 +109,7 @@ public class Tweet extends Model {
     public Tweet(JSONObject object){
         super();
 
-        Log.d("Tweet", "JSON object" + object.toString() );
+//        Log.d("Tweet", "JSON object" + object.toString() );
         try {
             JSONObject userObj = object.getJSONObject("user");
             String tid = object.getString("id_str");

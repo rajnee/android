@@ -23,13 +23,11 @@ import com.loopj.android.http.RequestParams;
  * 
  */
 public class RestClient extends OAuthBaseClient {
-	public static final Class<? extends Api> REST_API_CLASS = TwitterApi.class; // Change this
-	public static final String REST_URL = "https://api.twitter.com/1.1"; // Change this, base API URL
-//	public static final String REST_CONSUMER_KEY = "57fdgdfh345195e071f9a761d763ca0";       // Change this
-    public static final String REST_CONSUMER_KEY = "yqvhGvkOAS4Gt4CGFs2qfGQpO";       // Change this
-//	public static final String REST_CONSUMER_SECRET = "d657sdsg34435435"; // Change this
-    public static final String REST_CONSUMER_SECRET = "Uu2B85urUkeQYJHMJQF2rv2DzVzcZYx8if4LY6vmCcGpvYv2M6"; // Change this
-	public static final String REST_CALLBACK_URL = "oauth://rajtweets"; // Change this (here and in manifest)
+	public static final Class<? extends Api> REST_API_CLASS = TwitterApi.class;
+	public static final String REST_URL = "https://api.twitter.com/1.1";
+    public static final String REST_CONSUMER_KEY = "yqvhGvkOAS4Gt4CGFs2qfGQpO";
+    public static final String REST_CONSUMER_SECRET = "Uu2B85urUkeQYJHMJQF2rv2DzVzcZYx8if4LY6vmCcGpvYv2M6";
+	public static final String REST_CALLBACK_URL = "oauth://rajtweets";
 
 	public RestClient(Context context) {
 		super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
@@ -37,25 +35,11 @@ public class RestClient extends OAuthBaseClient {
 
     public void getProfileForCurrentUser(AsyncHttpResponseHandler handler)
     {
-        String apiUrl = getApiUrl("users/show.json");
+        String apiUrl = getApiUrl("account/verify_credentials.json");
         Log.d("RestClient", "Url:" + apiUrl);
         RequestParams params = new RequestParams();
-//        params.put("page", String.valueOf(page));
-//        params.put("trim_user",1);
-        params.put("user_id", );
         getClient().get(apiUrl, params, handler);
-
-
     }
-	// CHANGE THIS
-	// DEFINE METHODS for different API endpoints here
-	public void getInterestingnessList(AsyncHttpResponseHandler handler) {
-		String apiUrl = getApiUrl("?nojsoncallback=1&method=flickr.interestingness.getList");
-		// Can specify query string params directly or through RequestParams.
-		RequestParams params = new RequestParams();
-		params.put("format", "json");
-		client.get(apiUrl, params, handler);
-	}
 
 	/* 1. Define the endpoint URL with getApiUrl and pass a relative path to the endpoint
 	 * 	  i.e getApiUrl("statuses/home_timeline.json");
@@ -70,11 +54,10 @@ public class RestClient extends OAuthBaseClient {
         String apiUrl = getApiUrl("statuses/home_timeline.json");
         Log.d("RestClient", "Url:" + apiUrl);
         RequestParams params = new RequestParams();
-//        params.put("page", String.valueOf(page));
-//        params.put("trim_user",1);
         if (tweetId != -1) {
             params.put("since_id", tweetId);
         }
+        params.put("count", 200);
         getClient().get(apiUrl, params, handler);
     }
 
@@ -82,11 +65,10 @@ public class RestClient extends OAuthBaseClient {
         String apiUrl = getApiUrl("statuses/home_timeline.json");
         Log.d("RestClient", "Url:" + apiUrl);
         RequestParams params = new RequestParams();
-//        params.put("page", String.valueOf(page));
-//        params.put("trim_user",1);
         if (tweetId != -1) {
             params.put("max_id", tweetId);
         }
+        params.put("count", 200);
         getClient().get(apiUrl, params, handler);
     }
 
