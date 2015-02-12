@@ -6,12 +6,14 @@
     android:layout_width="match_parent" android:layout_height="match_parent">
 
     <ImageView
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:id="@+id/ivProfile"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:paddingRight="5dp"
+        android:paddingTop="5dp"
         android:scaleType="fitXY" />
 
     <TextView
@@ -19,9 +21,10 @@
         android:layout_height="wrap_content"
         android:text="@string/hint_user"
         android:id="@+id/tvUser"
-        android:textStyle="bold"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/ivProfile"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
         android:textSize="12sp" />
 
     <TextView
@@ -29,10 +32,10 @@
         android:layout_height="wrap_content"
         android:text="@string/hint_user"
         android:id="@+id/tvRelativeTime"
-        android:textStyle="bold"
-        android:layout_alignParentTop="true"
+        android:paddingTop="5dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:paddingBottom="5dp"
         android:textSize="8sp" />
 
     <TextView

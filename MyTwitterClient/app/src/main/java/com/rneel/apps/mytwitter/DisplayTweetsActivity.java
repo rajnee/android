@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -27,8 +28,13 @@ public class DisplayTweetsActivity extends ActionBarActivity {
     private SwipeRefreshLayout swipeRefreshLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_LEFT_ICON);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_tweets);
+//        getSupportActionBar().setDisplayShowHomeEnabled(true);
+//        getSupportActionBar().setLogo(R.drawable.ic_twitter);
+//        getSupportActionBar().setIcon(R.drawable.ic_twitter);
+//        getSupportActionBar().setDisplayUseLogoEnabled(true);
         tweets = new ArrayList<>();
         tweetListAdapter = new TweetListAdapter(this,tweets);
         lvTweets = (ListView)findViewById(R.id.lvTweets);

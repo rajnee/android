@@ -30,8 +30,7 @@
         <activity
             android:name="com.rneel.apps.mytwitter.LoginActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme" 
-            android:icon="@drawable/ic_tweet">
+            android:theme="@style/AppTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -50,12 +49,10 @@
         </activity>
         <activity
             android:name="com.rneel.apps.mytwitter.AddTweetActivity"
-            android:icon="@drawable/ic_tweet"
             android:label="@string/title_activity_add_tweet" >
         </activity>
         <activity
             android:name="com.rneel.apps.mytwitter.DisplayTweetsActivity"
-            android:icon="@drawable/ic_tweet"
             android:label="@string/title_activity_display_tweets" >
         </activity>
     </application>
