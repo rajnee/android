@@ -1,0 +1,30 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent" 
+    tools:context="com.example.rneel.fragmentswithviewpager.FragmentActivity">
+
+    <com.astuetz.PagerSlidingTabStrip
+        android:id="@+id/tabs"
+        app:pstsShouldExpand="true"
+        app:pstsIndicatorColor="#224422"
+        app:pstsUnderlineColor="#444444"
+        app:pstsIndicatorHeight="4dp"
+        app:pstsUnderlineHeight="2dp"
+        app:pstsTextAllCaps="true"
+        app:pstsTabBackground="@drawable/tabbackground"
+        app:pstsDividerColor="#FFFFFF"
+        android:layout_width="match_parent"
+        android:layout_height="24dp">
+    </com.astuetz.PagerSlidingTabStrip>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/tabs"
+        android:layout_height="@dimen/abc_action_bar_stacked_max_height"
+        android:layout_alignParentBottom="true"
+        />
+
+</RelativeLayout>
+<!-- From: file:/Users/rneel/work/androidstuff/FragmentsWithViewPager/app/src/main/res/layout/activity_fragment.xml -->

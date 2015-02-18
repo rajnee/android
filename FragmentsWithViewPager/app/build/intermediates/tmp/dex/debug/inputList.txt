@@ -1,0 +1,6 @@
+/Users/rneel/work/androidstuff/FragmentsWithViewPager/app/build/intermediates/classes/debug
+/Users/rneel/work/androidstuff/FragmentsWithViewPager/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.3-c4106fb37e3484b218276633cdfdc2670b6e351e.jar
+/Users/rneel/work/androidstuff/FragmentsWithViewPager/app/build/intermediates/pre-dexed/debug/classes-7cf02093d4879a8d5941439f378e20a6ac4a4640.jar
+/Users/rneel/work/androidstuff/FragmentsWithViewPager/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-bdbd06787c85dbafa05fcf5006f3b694495b5bbd.jar
+/Users/rneel/work/androidstuff/FragmentsWithViewPager/app/build/intermediates/pre-dexed/debug/classes-689009d4b9bf481be6b0b8aff25338c1096f53fa.jar
+/Users/rneel/work/androidstuff/FragmentsWithViewPager/app/build/intermediates/pre-dexed/debug/classes-d0e12847b04ff4bc55a430bffad9a07f5777be16.jar
