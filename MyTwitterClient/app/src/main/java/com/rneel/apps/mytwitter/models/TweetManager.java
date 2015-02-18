@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
+import android.os.Looper;
 import android.util.Log;
 
 import com.activeandroid.query.Select;
@@ -29,7 +30,7 @@ public class TweetManager {
     private Context context;
     private MyTwitterDB myTwitterDB;
     private SQLiteDatabase db;
-    
+
     public static void init(Context context)
     {
         if (tweetManager == null)
@@ -135,33 +136,6 @@ public class TweetManager {
         new LoadTweetTask(howMany,beforeTweetId,tweetsReceiver).execute();
     }
     
-    public void loadMoreOld(int howMany, long beforeTweetId, final TweetsReceiver tweetsReceiver)
-    {
-        //Get from database first
-        final List<Tweet> dbTweets = new Select().from(Tweet.class).where("tweetId < " + beforeTweetId).limit(howMany).execute();
-        if (dbTweets.size() == howMany)
-        {
-            tweetsReceiver.tweetsReceived(dbTweets);
-            return;    
-        }
-
-        long lastTweetInDB = dbTweets.get(dbTweets.size()-1).getTweetId();
-        //We do not have enough tweets in the db, let us load more
-        RestClient client = RestApplication.getRestClient();
-        client.getHomeTimelineBefore(lastTweetInDB, new TweetResponseHandler() {
-            @Override
-            protected void tweetsReceived(List<Tweet> t1) {
-                dbTweets.addAll(t1);
-                tweetsReceiver.tweetsReceived(dbTweets);
-            }
-
-            @Override
-            protected void tweetsError(String message) {
-                tweetsReceiver.tweetError(message);
-            }
-        });
-        
-    }
     public void refresh(final TweetsReceiver tweetsReceiver)
     {
         RestClient client = RestApplication.getRestClient();
