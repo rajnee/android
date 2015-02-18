@@ -23,61 +23,34 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.text.ParseException;
 
-@Table(name = "Tweets")
-public class Tweet extends Model {
+
+public abstract class Tweet extends Model {
     // Define database columns and associated fields
-    @Column(name = "userId")
-    String userId;
-    @Column(name = "userHandle")
-    String userHandle;
-    @Column(name = "timestamp", index = true)
-    String timestamp;
-    @Column(name = "body")
-    String body;
+    public abstract long getTweetId();
 
-    @Column(name="profileImage")
-    String profileImage;
+    public abstract String getProfileImage();
+    public abstract String getUserId();
+
+    public abstract void setUserId(String userId);
     
-    @Column(name="tweetId", index = true)
-    long tweetId;
 
+    public abstract String getUserHandle();
+    
 
-    public long getTweetId() {
-        return tweetId;
-    }
+    public abstract void setTweetId(long tweetId);
+    public abstract void setUserHandle(String userHandle);
+    public abstract String getTimestamp();
 
-    public String getProfileImage() { return profileImage; }
-    public String getUserId() {
-        return userId;
-    }
+    public abstract void setTimestamp(String timestamp);
+    
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
+    public abstract void setProfileImageUrl(String profileImageUrl);
+    
+    public abstract String getBody();
+    
 
-    public String getUserHandle() {
-        return userHandle;
-    }
-
-    public void setUserHandle(String userHandle) {
-        this.userHandle = userHandle;
-    }
-
-    public String getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public String getBody() {
-        return body;
-    }
-
-    public void setBody(String body) {
-        this.body = body;
-    }
+    public abstract void setBody(String body);
+    
 
     // Make sure to always define this constructor with no arguments
     public Tweet() {
@@ -105,26 +78,27 @@ public class Tweet extends Model {
 
         return relativeDate;
     }    
+    
+    
     // Add a constructor that creates an object from the JSON response
-    public Tweet(JSONObject object){
-        super();
+    public void ingestJson(JSONObject object){
 
 //        Log.d("Tweet", "JSON object" + object.toString() );
         try {
             JSONObject userObj = object.getJSONObject("user");
             String tid = object.getString("id_str");
-            this.tweetId = Long.parseLong(tid);
-            this.userId = userObj.getString("id");
-            this.userHandle = userObj.getString("name");
-            this.timestamp = object.getString("created_at");
-            this.body = object.getString("text");
-            this.profileImage = userObj.getString("profile_image_url");
+            this.setTweetId(Long.parseLong(tid));
+            this.setUserId(userObj.getString("id"));
+            this.setUserHandle(userObj.getString("name"));
+            this.setTimestamp(object.getString("created_at"));
+            this.setBody(object.getString("text"));
+            this.setProfileImageUrl(userObj.getString("profile_image_url"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    public static ArrayList<Tweet> fromJson(JSONArray jsonArray) {
+    public static ArrayList<Tweet> fromJson(JSONArray jsonArray, Class<? extends Tweet> tweetClass) {
         ArrayList<Tweet> tweets = new ArrayList<Tweet>(jsonArray.length());
 
         for (int i=0; i < jsonArray.length(); i++) {
@@ -136,7 +110,17 @@ public class Tweet extends Model {
                 continue;
             }
 
-            Tweet tweet = new Tweet(tweetJson);
+            Tweet tweet = null;
+            try {
+                tweet = tweetClass.newInstance();
+                //TODO: pass the json to the created tweet
+                tweet.ingestJson(tweetJson);
+               
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
             tweet.save();
             tweets.add(tweet);
         }

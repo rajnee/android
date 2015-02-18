@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="lightblue" type="color">#88BBFF</item>
-    
+    <item name="twitterblue" type="color">#AACCFF</item>
+    <item name="twitterbluepressed" type="color">#88BBFF</item>
+    <item name="twitterbluefocus" type="color">#88BBFF</item>
+
 </resources>

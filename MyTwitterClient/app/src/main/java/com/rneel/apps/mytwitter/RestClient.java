@@ -52,6 +52,16 @@ public class RestClient extends OAuthBaseClient {
     // RestClient.java
     public void getHomeTimeLineAfter(long tweetId, AsyncHttpResponseHandler handler) {
         String apiUrl = getApiUrl("statuses/home_timeline.json");
+        getTimeLineAfter(tweetId,handler,apiUrl);
+    }
+
+    public void getMentionsTimeLineAfter(long tweetId, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("statuses/mentions_timeline.json");
+        getTimeLineAfter(tweetId,handler,apiUrl);
+    }
+
+    private void getTimeLineAfter(long tweetId, AsyncHttpResponseHandler handler, String apiUrl)
+    {
         Log.d("RestClient", "Url:" + apiUrl);
         RequestParams params = new RequestParams();
         if (tweetId != -1) {
@@ -63,6 +73,15 @@ public class RestClient extends OAuthBaseClient {
 
     public void getHomeTimelineBefore(long tweetId, AsyncHttpResponseHandler handler) {
         String apiUrl = getApiUrl("statuses/home_timeline.json");
+        getTimelineBefore(tweetId, handler, apiUrl);
+    }
+
+    public void getMentionsTimelineBefore(long tweetId, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("statuses/mentions_timeline.json");
+        getTimelineBefore(tweetId, handler, apiUrl);
+    }
+
+    private void getTimelineBefore(long tweetId, AsyncHttpResponseHandler handler, String apiUrl) {
         Log.d("RestClient", "Url:" + apiUrl);
         RequestParams params = new RequestParams();
         if (tweetId != -1) {

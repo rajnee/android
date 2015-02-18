@@ -92,14 +92,14 @@ public class DisplayTweetsActivity extends ActionBarActivity {
         if (requiredTill > 0)
         {
             TweetManager tweetManager = TweetManager.getInstance();
-            tweetManager.loadMore(neededMore, beforeTweetId, getTweetsReceiver());
+            tweetManager.loadMore(neededMore, beforeTweetId, getTweetsReceiver(),TweetManager.HOME_TIMELINE);
         }
     }
     
     private void refresh() {
         // SomeActivity.java
         TweetManager tweetManager = TweetManager.getInstance();
-        tweetManager.refresh(getTweetsReceiver());
+        tweetManager.refresh(getTweetsReceiver(),TweetManager.HOME_TIMELINE);
     }
 
     @Override

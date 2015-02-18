@@ -25,6 +25,9 @@ import java.util.List;
  */
 public class TweetManager {
     
+    public static final int HOME_TIMELINE = 1;
+    public static final int MENTIONS_TIMELINE = 2;
+
     private static  TweetManager tweetManager;
     private Context context;
     private MyTwitterDB myTwitterDB;
@@ -64,10 +67,17 @@ public class TweetManager {
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) { }
     }
     
-    public long selectMaxId()
+    public long selectMaxId(int timeline)
     {
         long maxId = -1;
-        Cursor cursor = db.rawQuery("select max(tweetId) from Tweets", new String[0]);
+        Cursor cursor;
+        if (timeline == HOME_TIMELINE) {
+            cursor = db.rawQuery("select max(tweetId) from Tweets", new String[0]);
+        }
+        else
+        {
+            cursor = db.rawQuery("select max(tweetId) from MentionsTweets", new String[0]);
+        }
         if (cursor.moveToFirst())
         {
             maxId = cursor.getLong(0);
@@ -84,16 +94,25 @@ public class TweetManager {
         private final TweetsReceiver tweetsReceiver;
         private final long beforeTweetId;
         private final int howMany;
-        public LoadTweetTask(int howMany, long beforeTweetId, TweetsReceiver tweetsReceiver)
+        private final int timeline;
+        public LoadTweetTask(int howMany, long beforeTweetId, TweetsReceiver tweetsReceiver, int timeline)
         {
             this.tweetsReceiver = tweetsReceiver;
             this.beforeTweetId = beforeTweetId;
             this.howMany = howMany;
+            this.timeline = timeline;
         }
         
         @Override
         protected List<Tweet> doInBackground(Void... params) {
-            final List<Tweet> dbTweets = new Select().from(Tweet.class).where("tweetId < " + beforeTweetId).limit(howMany).execute();
+            final List<Tweet> dbTweets;
+            if (timeline == HOME_TIMELINE) {
+                dbTweets = new Select().from(HomeTweet.class).where("tweetId < " + beforeTweetId).limit(howMany).execute();
+            }
+            else
+            {
+                dbTweets = new Select().from(MentionsTweet.class).where("tweetId < " + beforeTweetId).limit(howMany).execute();
+            }
             return dbTweets;
         }
 
@@ -108,10 +127,13 @@ public class TweetManager {
             {
 
                 //we have to attempt to get from Twitter by calling API
-                long lastTweetInDB = dbTweets.get(dbTweets.size() - 1).getTweetId();
+                long lastTweetInDB = Long.MAX_VALUE;
+                if (dbTweets.size() > 0) {
+                 lastTweetInDB = dbTweets.get(dbTweets.size() - 1).getTweetId();
+                }
                 //We do not have enough tweets in the db, let us load more
                 RestClient client = RestApplication.getRestClient();
-                client.getHomeTimelineBefore(lastTweetInDB, new TweetResponseHandler() {
+                TweetResponseHandler responseHandler = new TweetResponseHandler() {
                     @Override
                     protected void tweetsReceived(List<Tweet> t1) {
                         dbTweets.addAll(t1);
@@ -122,7 +144,18 @@ public class TweetManager {
                     protected void tweetsError(String message) {
                         tweetsReceiver.tweetError(message);
                     }
-                });
+
+                    @Override
+                    protected int getTimeLine() {
+                        return timeline;
+                    }
+                };
+                if (timeline == HOME_TIMELINE) {
+                    client.getHomeTimelineBefore(lastTweetInDB, responseHandler);
+                }
+                else {
+                    client.getMentionsTimelineBefore(lastTweetInDB, responseHandler);
+                }
 
             }
         }
@@ -130,9 +163,9 @@ public class TweetManager {
     }
 
 
-    public void loadMore(int howMany, long beforeTweetId, final TweetsReceiver tweetsReceiver) 
+    public void loadMore(int howMany, long beforeTweetId, final TweetsReceiver tweetsReceiver, int timeline) 
     {
-        new LoadTweetTask(howMany,beforeTweetId,tweetsReceiver).execute();
+        new LoadTweetTask(howMany,beforeTweetId,tweetsReceiver, timeline).execute();
     }
     
     public void loadMoreOld(int howMany, long beforeTweetId, final TweetsReceiver tweetsReceiver)
@@ -159,15 +192,21 @@ public class TweetManager {
             protected void tweetsError(String message) {
                 tweetsReceiver.tweetError(message);
             }
+
+            @Override
+            protected int getTimeLine() {
+                return HOME_TIMELINE;
+            }
         });
         
     }
-    public void refresh(final TweetsReceiver tweetsReceiver)
+    public void refresh(final TweetsReceiver tweetsReceiver, final int timeline)
     {
         RestClient client = RestApplication.getRestClient();
-        client.getHomeTimeLineAfter(selectMaxId(), new TweetResponseHandler() {
+        TweetResponseHandler responseHandler = new TweetResponseHandler() {
             @Override
             protected void tweetsReceived(List<Tweet> t1) {
+                
                 tweetsReceiver.tweetsReceived(t1);
             }
 
@@ -175,7 +214,18 @@ public class TweetManager {
             protected void tweetsError(String message) {
                 tweetsReceiver.tweetError(message);
             }
-        });
+
+            @Override
+            protected int getTimeLine() {
+                return timeline;
+            }
+        };
+        if (timeline == HOME_TIMELINE) {
+            client.getHomeTimeLineAfter(selectMaxId(timeline), responseHandler);
+        }
+        else {
+            client.getMentionsTimeLineAfter(selectMaxId(timeline), responseHandler);
+        }
     }
     
     public static abstract class TweetResponseHandler extends JsonHttpResponseHandler
@@ -184,13 +234,26 @@ public class TweetManager {
         public void onSuccess(int statusCode, Header[] headers, JSONArray json) {
             // Response is automatically parsed into a JSONArray
             // json.getJSONObject(0).getLong("id");
-            ArrayList<Tweet> t = Tweet.fromJson(json);
-            List <Tweet> t1 = new Select().from(Tweet.class).orderBy("tweetId").limit(20).execute();
+            
+            ArrayList<Tweet> t = null;
+            List <Tweet> t1 = null;
+            if (getTimeLine() == HOME_TIMELINE)
+            {
+                t = HomeTweet.fromJson(json, HomeTweet.class);
+                t1 = new Select().from(HomeTweet.class).orderBy("tweetId").limit(20).execute();
+
+            } 
+            else
+            {
+                t = MentionsTweet.fromJson(json, MentionsTweet.class);
+                t1 = new Select().from(MentionsTweet.class).orderBy("tweetId").limit(20).execute();
+            }
             tweetsReceived(t1);
         }
 
         protected abstract void tweetsReceived(List<Tweet> t1);
         protected abstract void tweetsError(String message);
+        protected abstract int getTimeLine();
             
         @Override
         public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {

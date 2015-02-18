@@ -13,5 +13,6 @@
     <string name="hint_enter_tweet">Enter your tweet</string>
     <string name="btn_tweet">Send Tweet</string>
     <string name="btn_cancel">Cancel</string>
+    <string name="title_activity_main">MainActivity</string>
 
 </resources>
