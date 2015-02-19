@@ -1,17 +1,23 @@
 package com.rneel.apps.mytwitter;
 
+import android.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.astuetz.PagerSlidingTabStrip;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements AddTweetFragment.OnFragmentInteractionListener {
 
     private PagerSlidingTabStrip tabs;
+    private AddTweetFragment addTweetFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,10 +45,50 @@ public class MainActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
+
+        if (id == R.id.action_compose) {
+//            Toast.makeText(this,"clicked compose", Toast.LENGTH_SHORT).show();
+//            Intent i = new Intent(this,AddTweetActivity.class);
+//            startActivity(i);
+//            addTweetFragment = AddTweetFragment.newInstance("x","y");
+//            addTweetFragment.show(getSupportFragmentManager(), "test");
+            showDialog();
             return true;
         }
 
+
+
         return super.onOptionsItemSelected(item);
     }
+
+    void showDialog() {
+//        mStackLevel++;
+
+        // DialogFragment.show() will take care of adding the fragment
+        // in a transaction.  We also want to remove any currently showing
+        // dialog, so make our own transaction and take care of that here.
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//        Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+//        if (prev != null) {
+//            ft.remove(prev);
+//        }
+//        ft.addToBackStack(null);
+
+        // Create and show the dialog.
+        addTweetFragment = AddTweetFragment.newInstance("x","y");
+        addTweetFragment.show(ft, "dialog");
+    }
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    public void onCancelClick(View view)
+    {
+        addTweetFragment.dismiss();
+    }
+
 }

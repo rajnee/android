@@ -127,14 +127,21 @@ public class TweetManager {
         private final long beforeTweetId;
         private final int howMany;
         private final int timeline;
-        public LoadTweetTask(int howMany, long beforeTweetId, TweetsReceiver tweetsReceiver, int timeline)
+        private boolean loadIfNotEnough;
+        public LoadTweetTask(int howMany, long beforeTweetId, TweetsReceiver tweetsReceiver, int timeline, boolean loadIfNotEnough)
         {
             this.tweetsReceiver = tweetsReceiver;
             this.beforeTweetId = beforeTweetId;
             this.howMany = howMany;
             this.timeline = timeline;
+            this.loadIfNotEnough = loadIfNotEnough;
         }
         
+        public void setLoadIfNotEnough(boolean loadIfNotEnough)
+        {
+            this.loadIfNotEnough = loadIfNotEnough;
+            
+        }
         @Override
         protected List<Tweet> doInBackground(Void... params) {
             final List<Tweet> dbTweets;
@@ -150,7 +157,7 @@ public class TweetManager {
 
         @Override
         protected void onPostExecute(final List<Tweet> dbTweets) {
-            if (dbTweets.size() == howMany)
+            if (!loadIfNotEnough || dbTweets.size() == howMany)
             {
                 tweetsReceiver.tweetsReceived(dbTweets);
                 return;
@@ -197,49 +204,20 @@ public class TweetManager {
 
     public void loadMore(int howMany, long beforeTweetId, final TweetsReceiver tweetsReceiver, int timeline) 
     {
-        new LoadTweetTask(howMany,beforeTweetId,tweetsReceiver, timeline).execute();
+        new LoadTweetTask(howMany,beforeTweetId,tweetsReceiver, timeline, true).execute();
     }
     
-    public void loadMoreOld(int howMany, long beforeTweetId, final TweetsReceiver tweetsReceiver)
-    {
-        //Get from database first
-        final List<Tweet> dbTweets = new Select().from(Tweet.class).where("tweetId < " + beforeTweetId).limit(howMany).execute();
-        if (dbTweets.size() == howMany)
-        {
-            tweetsReceiver.tweetsReceived(dbTweets);
-            return;    
-        }
-
-        long lastTweetInDB = dbTweets.get(dbTweets.size()-1).getTweetId();
-        //We do not have enough tweets in the db, let us load more
-        RestClient client = RestApplication.getRestClient();
-        client.getHomeTimelineBefore(lastTweetInDB, new TweetResponseHandler() {
-            @Override
-            protected void tweetsReceived(List<Tweet> t1) {
-                dbTweets.addAll(t1);
-                tweetsReceiver.tweetsReceived(dbTweets);
-            }
-
-            @Override
-            protected void tweetsError(String message) {
-                tweetsReceiver.tweetError(message);
-            }
-
-            @Override
-            protected int getTimeLine() {
-                return HOME_TIMELINE;
-            }
-        });
-        
-    }
     public void refresh(final TweetsReceiver tweetsReceiver, final int timeline)
     {
         final RestClient client = RestApplication.getRestClient();
         final TweetResponseHandler responseHandler = new TweetResponseHandler() {
             @Override
             protected void tweetsReceived(List<Tweet> t1) {
-                
-                tweetsReceiver.tweetsReceived(t1);
+                //Tweets are loaded from twitter after a http call
+                //tweets would have been saved to db, get from db and show
+//                loadMore(15, Long.MAX_VALUE,tweetsReceiver,timeline);
+//                tweetsReceiver.tweetsReceived(t1);
+                new LoadTweetTask(15,Long.MAX_VALUE,tweetsReceiver, timeline, false).execute();
             }
 
             @Override

@@ -29,6 +29,7 @@ public class RestClient extends OAuthBaseClient {
     public static final String REST_CONSUMER_SECRET = "Uu2B85urUkeQYJHMJQF2rv2DzVzcZYx8if4LY6vmCcGpvYv2M6";
 	public static final String REST_CALLBACK_URL = "oauth://rajtweets";
 
+    private static long lastTimeOfRequest;
 	public RestClient(Context context) {
 		super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
 	}
@@ -56,8 +57,13 @@ public class RestClient extends OAuthBaseClient {
     }
 
     public void getMentionsTimeLineAfter(long tweetId, AsyncHttpResponseHandler handler) {
+        if (System.currentTimeMillis() - lastTimeOfRequest < 5000)
+        {
+            return;
+        }
+        lastTimeOfRequest = System.currentTimeMillis();
         String apiUrl = getApiUrl("statuses/mentions_timeline.json");
-        getTimeLineAfter(tweetId,handler,apiUrl);
+//        getTimeLineAfter(tweetId,handler,apiUrl);
     }
 
     private void getTimeLineAfter(long tweetId, AsyncHttpResponseHandler handler, String apiUrl)
