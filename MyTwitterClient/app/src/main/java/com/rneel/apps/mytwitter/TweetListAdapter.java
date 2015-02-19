@@ -24,25 +24,24 @@ public class TweetListAdapter extends ArrayAdapter<Tweet> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder vh = null;
-        Tweet tweet = getItem(position);
-        if (convertView == null)
-        {
-            vh = new ViewHolder();
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.layout_tweet,parent,false);
-            vh.tvTweet = (TextView)convertView.findViewById(R.id.tvTweet);
-            vh.tvUser = (TextView)convertView.findViewById(R.id.tvUser);
-            vh.tvRelativeDate = (TextView)convertView.findViewById(R.id.tvRelativeTime);
-            vh.ivProfile = (ImageView)convertView.findViewById(R.id.ivProfile);
-            convertView.setTag(vh);
+        if (position < getCount()) {
+            Tweet tweet = getItem(position);
+            if (convertView == null) {
+                vh = new ViewHolder();
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.layout_tweet, parent, false);
+                vh.tvTweet = (TextView) convertView.findViewById(R.id.tvTweet);
+                vh.tvUser = (TextView) convertView.findViewById(R.id.tvUser);
+                vh.tvRelativeDate = (TextView) convertView.findViewById(R.id.tvRelativeTime);
+                vh.ivProfile = (ImageView) convertView.findViewById(R.id.ivProfile);
+                convertView.setTag(vh);
+            } else {
+                vh = (ViewHolder) convertView.getTag();
+            }
+            vh.tvUser.setText(tweet.getUserHandle());
+            vh.tvTweet.setText(tweet.getBody());
+            vh.tvRelativeDate.setText(tweet.getRelativeTime());
+            Picasso.with(getContext()).load(tweet.getProfileImage()).into(vh.ivProfile);
         }
-        else
-        {
-            vh = (ViewHolder)convertView.getTag();
-        }
-        vh.tvUser.setText(tweet.getUserHandle());
-        vh.tvTweet.setText(tweet.getBody());
-        vh.tvRelativeDate.setText(tweet.getRelativeTime());
-        Picasso.with(getContext()).load(tweet.getProfileImage()).into(vh.ivProfile);
         return convertView;
     }
     

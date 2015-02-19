@@ -19,6 +19,7 @@ public class TwitterFragmentAdapter extends FragmentPagerAdapter {
         super(fm);
         homeLineFragment = new HomeLineFragment();
         mentionsFragment = new MentionsFragment();
+        
     }
 
     @Override
@@ -30,11 +31,11 @@ public class TwitterFragmentAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         if (position == 0)
         {
-            return homeLineFragment;
+            return mentionsFragment;
         }
         else
         {
-            return mentionsFragment;
+            return homeLineFragment;
         }
     }
 

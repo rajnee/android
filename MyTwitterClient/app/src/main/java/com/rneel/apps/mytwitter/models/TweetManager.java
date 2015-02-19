@@ -67,26 +67,58 @@ public class TweetManager {
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) { }
     }
     
-    public long selectMaxId(int timeline)
+    private static class SelectMaxIdTask extends AsyncTask<Void, Void, Long>
     {
-        long maxId = -1;
-        Cursor cursor;
-        if (timeline == HOME_TIMELINE) {
-            cursor = db.rawQuery("select max(tweetId) from Tweets", new String[0]);
-        }
-        else
+        
+        private int timeline;
+        private SQLiteDatabase db;
+        private Runnable task;
+        private long maxTweetId;
+        public SelectMaxIdTask(int timeline, SQLiteDatabase db, Runnable task)
         {
-            cursor = db.rawQuery("select max(tweetId) from MentionsTweets", new String[0]);
+            this.timeline = timeline;
+            this.db = db;
+            this.task = task;
         }
-        if (cursor.moveToFirst())
+
+        public long getMaxTweetId()
         {
-            maxId = cursor.getLong(0);
-            if (maxId == 0)
-            {
-                maxId = -1;
+            return maxTweetId;
+            
+        }
+        
+        public long selectMaxId()
+        {
+            long maxId = -1;
+            Cursor cursor;
+            if (timeline == HOME_TIMELINE) {
+                cursor = db.rawQuery("select max(tweetId) from Tweets", new String[0]);
             }
+            else
+            {
+                cursor = db.rawQuery("select max(tweetId) from MentionsTweets", new String[0]);
+            }
+            if (cursor.moveToFirst())
+            {
+                maxId = cursor.getLong(0);
+                if (maxId == 0)
+                {
+                    maxId = -1;
+                }
+            }
+            return maxId;
         }
-        return maxId;
+
+        @Override
+        protected Long doInBackground(Void... params) {
+            maxTweetId = selectMaxId();
+            return maxTweetId;
+        }
+
+        @Override
+        protected void onPostExecute(Long maxTweetId) {
+            task.run();
+        }
     }
     
     private class LoadTweetTask extends AsyncTask<Void, Void, List<Tweet>>
@@ -202,8 +234,8 @@ public class TweetManager {
     }
     public void refresh(final TweetsReceiver tweetsReceiver, final int timeline)
     {
-        RestClient client = RestApplication.getRestClient();
-        TweetResponseHandler responseHandler = new TweetResponseHandler() {
+        final RestClient client = RestApplication.getRestClient();
+        final TweetResponseHandler responseHandler = new TweetResponseHandler() {
             @Override
             protected void tweetsReceived(List<Tweet> t1) {
                 
@@ -220,12 +252,20 @@ public class TweetManager {
                 return timeline;
             }
         };
-        if (timeline == HOME_TIMELINE) {
-            client.getHomeTimeLineAfter(selectMaxId(timeline), responseHandler);
-        }
-        else {
-            client.getMentionsTimeLineAfter(selectMaxId(timeline), responseHandler);
-        }
+        final SelectMaxIdTask task = new SelectMaxIdTask(timeline,db, null);
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                if (timeline == HOME_TIMELINE) {
+                    client.getHomeTimeLineAfter(task.getMaxTweetId(), responseHandler);
+                }
+                else {
+                    client.getMentionsTimeLineAfter(task.getMaxTweetId(), responseHandler);
+                }
+            }
+        };
+        task.task = r;
+        task.execute();
     }
     
     public static abstract class TweetResponseHandler extends JsonHttpResponseHandler

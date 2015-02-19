@@ -56,6 +56,7 @@ public abstract class BaseFragment extends Fragment {
             }
         });
 
+        Log.d("BaseFragment", "OnCreateView for:" + this.getClass().getName());
         return v;
     }
 
@@ -71,7 +72,7 @@ public abstract class BaseFragment extends Fragment {
 
             @Override
             public void tweetError(String message) {
-                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT);
+                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                 BaseFragment.this.swipeRefreshLayout.setRefreshing(false);
             }
         };
