@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
 
@@ -60,6 +61,13 @@ public class MainActivity extends ActionBarActivity implements AddTweetFragment.
         }
 
 
+        if (id == R.id.action_profile)
+        {
+//            Toast.makeText(this,"Profile clicked", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(this,ProfileActivity.class);
+            startActivity(i);
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -78,7 +86,7 @@ public class MainActivity extends ActionBarActivity implements AddTweetFragment.
 //        ft.addToBackStack(null);
 
         // Create and show the dialog.
-        addTweetFragment = AddTweetFragment.newInstance("x","y");
+        addTweetFragment = AddTweetFragment.newInstance();
         addTweetFragment.show(ft, "dialog");
     }
     @Override

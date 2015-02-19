@@ -88,7 +88,7 @@ public abstract class Tweet extends Model {
             JSONObject userObj = object.getJSONObject("user");
             String tid = object.getString("id_str");
             this.setTweetId(Long.parseLong(tid));
-            this.setUserId(userObj.getString("id"));
+            this.setUserId(userObj.getString("screen_name"));
             this.setUserHandle(userObj.getString("name"));
             this.setTimestamp(object.getString("created_at"));
             this.setBody(object.getString("text"));
@@ -121,7 +121,10 @@ public abstract class Tweet extends Model {
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
-            tweet.save();
+            //TODO: Kludge to avoiding saving in db,
+            if (tweetClass != UserTweet.class) {
+                tweet.save();
+            }
             tweets.add(tweet);
         }
 

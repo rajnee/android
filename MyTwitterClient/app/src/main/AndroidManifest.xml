@@ -53,14 +53,16 @@
             android:name=".DisplayTweetsActivity"
             android:label="@string/title_activity_display_tweets" >
         </activity>
-
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".ProfileActivity"
+            android:label="@string/title_activity_profile" >
         </activity>
     </application>
 

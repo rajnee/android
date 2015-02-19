@@ -30,6 +30,7 @@ public abstract class BaseFragment extends Fragment {
     protected ListView lvTweets;
     protected SwipeRefreshLayout swipeRefreshLayout;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 

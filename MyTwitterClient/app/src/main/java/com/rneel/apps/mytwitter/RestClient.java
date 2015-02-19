@@ -34,6 +34,24 @@ public class RestClient extends OAuthBaseClient {
 		super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
 	}
 
+    public void getProfileForUser(String screenName, AsyncHttpResponseHandler handler )
+    {
+
+        if (screenName != null) {
+            String apiUrl = getApiUrl("users/show.json");
+            Log.d("RestClient", "Url:" + apiUrl);
+            RequestParams params = new RequestParams();
+            if (screenName != null) {
+                params.put("screen_name", screenName);
+            }
+            getClient().get(apiUrl, params, handler);
+        }
+        else
+        {
+            getProfileForCurrentUser(handler);
+        }
+        
+    }
     public void getProfileForCurrentUser(AsyncHttpResponseHandler handler)
     {
         String apiUrl = getApiUrl("account/verify_credentials.json");
@@ -56,6 +74,15 @@ public class RestClient extends OAuthBaseClient {
         getTimeLineAfter(tweetId,handler,apiUrl);
     }
 
+    public void getUserTimeLine(String screenName, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("statuses/user_timeline.json");
+        Log.d("RestClient", "Url:" + apiUrl);
+        RequestParams params = new RequestParams();
+        params.put("count", 200);
+        params.put("screen_name", screenName);
+        getClient().get(apiUrl, params, handler);
+    }
+
     public void getMentionsTimeLineAfter(long tweetId, AsyncHttpResponseHandler handler) {
         if (System.currentTimeMillis() - lastTimeOfRequest < 5000)
         {
@@ -63,7 +90,7 @@ public class RestClient extends OAuthBaseClient {
         }
         lastTimeOfRequest = System.currentTimeMillis();
         String apiUrl = getApiUrl("statuses/mentions_timeline.json");
-//        getTimeLineAfter(tweetId,handler,apiUrl);
+        getTimeLineAfter(tweetId,handler,apiUrl);
     }
 
     private void getTimeLineAfter(long tweetId, AsyncHttpResponseHandler handler, String apiUrl)
@@ -77,6 +104,17 @@ public class RestClient extends OAuthBaseClient {
         getClient().get(apiUrl, params, handler);
     }
 
+    public void getUserTimeLineBefore(String screenName,long tweetId, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("statuses/user_timeline.json");
+        Log.d("RestClient", "Url:" + apiUrl);
+        RequestParams params = new RequestParams();
+        if (tweetId != -1) {
+            params.put("max_id", tweetId);
+        }
+        params.put("count", 200);
+        params.put("screen_name",screenName);
+        getClient().get(apiUrl, params, handler);
+    }
     public void getHomeTimelineBefore(long tweetId, AsyncHttpResponseHandler handler) {
         String apiUrl = getApiUrl("statuses/home_timeline.json");
         getTimelineBefore(tweetId, handler, apiUrl);

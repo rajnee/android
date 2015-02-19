@@ -31,11 +31,11 @@ public class TwitterFragmentAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         if (position == 0)
         {
-            return mentionsFragment;
+            return homeLineFragment;
         }
         else
         {
-            return homeLineFragment;
+            return mentionsFragment;
         }
     }
 
