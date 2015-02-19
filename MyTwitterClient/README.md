@@ -3,9 +3,23 @@ Grid image searcher demo:
 
 This is an Android demo application for displaying search images from google in a grid:
 
-Time spent: 10 hours spent in total
+Time spent: 20 hours spent in total
 
-Completed user stories:
+Completed user stories from phase 2:
+
+* [x] Required:User can switch between Timeline and Mention views using tabs.
+* [x] Required:User can view their home timeline tweets.
+* [x] Required:User can view the recent mentions of their username.
+* [x] Required:User can navigate to view their own profile
+* [x] Required:User can see picture, tagline, # of followers, # of following, and tweets on their profile.
+* [x] Required:User can click on the profile image in any tweet to see another user's profile.
+* [x] Required:User can see picture, tagline, # of followers, # of following, and tweets of clicked user.
+* [x] Required:Profile view should include that user's timeline
+* [x] Endless scrolling in all cases
+
+* [x] Storage of mentions and home time line in DB and retrieval mixing data from DB and twitter optimally
+
+Completed user stories from phase 1:
 
  * [x] Required:User can sign in to Twitter using OAuth login
  * [x] Required:User can view the tweets from their home timeline
@@ -24,7 +38,7 @@ Completed user stories:
 
     Walkthrough of all user stories:
 
-    ![Video Walkthrough](walkthrough.gif)
+    ![Video Walkthrough](walkthrough2.gif)
 
     GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
