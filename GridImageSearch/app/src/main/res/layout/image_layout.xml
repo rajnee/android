@@ -17,6 +17,7 @@
         android:layout_height="wrap_content"
         android:text="@string/txt_image_title"
         android:textSize="10sp"
+        android:textColor="#888888"
         android:id="@+id/tvTitle"
         android:layout_below="@+id/ivPicture"
         android:layout_alignParentLeft="true"

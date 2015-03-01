@@ -15,8 +15,8 @@
         android:id="@+id/lblAdvancedSearch"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:textSize="24sp"
-        android:textStyle="bold" />
+        android:textSize="20sp"
+         />
 
     <TextView
         android:layout_width="wrap_content"
@@ -26,8 +26,8 @@
         android:layout_below="@+id/lblAdvancedSearch"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:textSize="20sp"
-        android:layout_marginTop="20dp" />
+        style="@style/MentionText"
+         />
 
     <TextView
         android:layout_width="wrap_content"
@@ -37,8 +37,8 @@
         android:layout_below="@+id/lblImageSize"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:textSize="20sp"
-        android:layout_marginTop="20dp" />
+        style="@style/MentionText"
+         />
 
     <TextView
         android:layout_width="wrap_content"
@@ -48,8 +48,8 @@
         android:layout_below="@+id/lblColorFilter"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:textSize="20sp"
-        android:layout_marginTop="20dp" />
+        style="@style/MentionText"
+         />
 
     <TextView
         android:layout_width="wrap_content"
@@ -59,61 +59,50 @@
         android:layout_below="@+id/lblImageType"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:textSize="20sp"
-        android:layout_marginTop="20dp" />
+        style="@style/MentionText"
+         />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="@string/btn_save"
         android:id="@+id/btnSave"
         android:layout_below="@+id/lblSiteFilter"
         android:layout_centerHorizontal="true"
+        style="@style/WhiteOnBlackButton"
         android:layout_marginTop="35dp"
         android:onClick="onSaveClick"
-        android:textSize="20sp" />
+        />
 
     <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/spinnerImageSize"
+        style="@style/SettingSpinner"
         android:entries="@array/image_size_array"
-        android:paddingLeft="5dp"
-        android:layout_alignTop="@+id/lblImageSize"
         android:layout_toRightOf="@+id/lblImageType"
         android:layout_alignParentRight="true"
-     />
+        android:layout_alignBottom="@+id/lblImageSize" />
 
     <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/spinnerColorFilter"
+        style="@style/SettingSpinner"
         android:entries="@array/image_color_array"
-        android:paddingLeft="5dp"
-        android:layout_alignTop="@+id/lblColorFilter"
         android:layout_toRightOf="@+id/lblImageType"
         android:layout_alignParentRight="true"
-        />
+        android:layout_alignBottom="@+id/lblColorFilter" />
 
     <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/spinnerImageType"
+        style="@style/SettingSpinner"
         android:entries="@array/image_type_array"
-        android:paddingLeft="5dp"
-        android:layout_alignTop="@+id/lblImageType"
         android:layout_toRightOf="@+id/lblImageType"
         android:layout_alignParentRight="true"
-        />
+        android:layout_alignBottom="@+id/lblImageType" />
     
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/etSiteFilter"
-        android:paddingLeft="5dp"
-        android:layout_alignTop="@+id/lblSiteFilter"
-        android:layout_toRightOf="@+id/lblImageType"
+        android:background="@drawable/shape_fancy_text"
         android:layout_alignParentRight="true"
-     />
+        android:layout_alignBottom="@+id/lblSiteFilter"
+        android:layout_alignLeft="@+id/spinnerImageType" />
 
 </RelativeLayout>

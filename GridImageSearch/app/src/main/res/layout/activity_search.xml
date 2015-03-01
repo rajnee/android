@@ -1,6 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" 
+    android:layout_height="match_parent"
+    android:padding="1dp"
     tools:context="com.example.rneel.gridimagesearch.view.SearchActivity">
 
 
@@ -12,16 +13,20 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:hint="@string/hint_search_text"
+        android:layout_marginRight="1dp"
+        android:singleLine="true"
+        android:layout_marginTop="1dp"
+        android:background="@drawable/shape_fancy_text"
         android:layout_toLeftOf="@+id/btnSearch"
         android:layout_toStartOf="@+id/btnSearch"
         android:layout_alignBottom="@+id/btnSearch" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/WhiteOnBlackButton"
         android:text="@string/btn_search"
         android:id="@+id/btnSearch"
         android:onClick="onSearchForImage"
+        android:layout_marginTop="1dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
